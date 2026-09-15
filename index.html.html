@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hadeel Alshahrani — Software Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0c16;
+    --bg2:#11142a;
+    --violet:#8b6bff;
+    --cyan:#3fe8cf;
+    --coral:#ff7a7a;
+    --amber:#ffc857;
+    --text:#f4f5fb;
+    --text-dim:#9aa1bd;
+    --glass:rgba(255,255,255,0.045);
+    --glass-border:rgba(255,255,255,0.09);
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  ::selection{ background:var(--violet); color:#fff; }
+  h1,h2,h3,h4{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  a{ color:inherit; }
+  img{ max-width:100%; display:block; }
+  :focus-visible{ outline:2px solid var(--cyan); outline-offset:3px; }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
+  .grad-text{
+    background:linear-gradient(100deg,var(--violet),var(--cyan) 60%,var(--coral));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  /* ---------------- ambient background mesh ---------------- */
+  .bg-mesh{
+    position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none;
+  }
+  .blob{
+    position:absolute; border-radius:50%; filter:blur(90px); opacity:.35; mix-blend-mode:screen;
+  }
+  .b1{ width:480px;height:480px; background:var(--violet); top:-140px; left:-100px; animation:float1 22s ease-in-out infinite; }
+  .b2{ width:420px;height:420px; background:var(--cyan); bottom:-160px; right:-120px; animation:float2 26s ease-in-out infinite; }
+  .b3{ width:360px;height:360px; background:var(--coral); top:40%; left:60%; animation:float3 30s ease-in-out infinite; }
+  @keyframes float1{ 0%,100%{ transform:translate(0,0) scale(1);} 50%{ transform:translate(80px,60px) scale(1.15);} }
+  @keyframes float2{ 0%,100%{ transform:translate(0,0) scale(1);} 50%{ transform:translate(-60px,-50px) scale(1.1);} }
+  @keyframes float3{ 0%,100%{ transform:translate(0,0) scale(1);} 50%{ transform:translate(-90px,40px) scale(.9);} }
+  @media (prefers-reduced-motion: reduce){
+    .blob{ animation:none; }
+  }
+
+  /* cursor glow */
+  .cursor-glow{
+    position:fixed; top:0; left:0; width:420px; height:420px; margin:-210px 0 0 -210px;
+    border-radius:50%; pointer-events:none; z-index:1;
+    background:radial-gradient(circle, rgba(139,107,255,.18), transparent 70%);
+    transform:translate(-500px,-500px);
+    will-change:transform;
+  }
+
+  section, header, footer{ position:relative; z-index:2; }
+
+  /* ---------------- nav ---------------- */
+  nav{ position:sticky; top:0; z-index:30; padding:18px 24px; display:flex; justify-content:center; }
+  .nav-pill{
+    display:flex; align-items:center; gap:26px;
+    background:rgba(15,17,32,0.6); backdrop-filter:blur(14px);
+    border:1px solid var(--glass-border);
+    border-radius:100px; padding:10px 22px;
+    max-width:100%; overflow-x:auto;
+  }
+  .nav-pill .brand{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:.9rem; white-space:nowrap; }
+  .nav-links{ display:flex; gap:18px; list-style:none; margin:0; padding:0; }
+  .nav-links a{ font-size:.82rem; text-decoration:none; color:var(--text-dim); white-space:nowrap; transition:color .15s; }
+  .nav-links a:hover, .nav-links a:focus-visible{ color:var(--text); }
+
+  /* ---------------- hero ---------------- */
+  .hero{
+    min-height:92vh; display:flex; align-items:center; padding:40px 24px 60px;
+  }
+  .hero-grid{
+    max-width:1080px; margin:0 auto; width:100%;
+    display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:.78rem; color:var(--cyan);
+    border:1px solid rgba(63,232,207,.35); background:rgba(63,232,207,.08);
+    padding:6px 14px; border-radius:100px; margin-bottom:26px;
+  }
+  .eyebrow .dot{ width:6px;height:6px;border-radius:50%;background:var(--cyan); animation:pulse 2s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+
+  .hero h1{ font-size:clamp(2.4rem,5.4vw,3.6rem); line-height:1.08; margin-bottom:22px; }
+  .hero p.role{ font-size:clamp(1rem,2vw,1.2rem); color:var(--text-dim); max-width:44ch; margin-bottom:32px; }
+
+  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:44px; }
+  .btn{
+    position:relative; font-family:'Space Grotesk',sans-serif; font-weight:500; font-size:.9rem;
+    text-decoration:none; padding:14px 26px; border-radius:100px; display:inline-flex; align-items:center; gap:8px;
+    transition:transform .15s ease;
+  }
+  .btn-primary{ background:linear-gradient(100deg,var(--violet),var(--cyan)); color:#0a0c16; font-weight:600; }
+  .btn-ghost{ border:1px solid var(--glass-border); color:var(--text); }
+  .btn-ghost:hover{ border-color:var(--cyan); color:var(--cyan); }
+
+  .stat-row{ display:flex; gap:34px; flex-wrap:wrap; }
+  .stat{ }
+  .stat .num{ font-family:'Space Grotesk',sans-serif; font-size:1.7rem; font-weight:700; }
+  .stat .label{ font-size:.74rem; color:var(--text-dim); }
+
+  /* orbit photo */
+  .orbit-wrap{ position:relative; width:min(400px,90vw); height:min(400px,90vw); margin:0 auto; }
+  .ring-dashed{
+    position:absolute; inset:0; border-radius:50%; border:1.5px dashed rgba(255,255,255,.14);
+    animation:spin 70s linear infinite;
+  }
+  .photo-blob{
+    position:absolute; inset:64px; overflow:hidden;
+    border-radius:44% 56% 62% 38% / 48% 42% 58% 52%;
+    animation:blobshape 14s ease-in-out infinite;
+    box-shadow:0 0 70px rgba(139,107,255,.35);
+  }
+  .photo-blob img{ width:100%; height:100%; object-fit:cover; }
+  @keyframes blobshape{
+    0%,100%{ border-radius:44% 56% 62% 38% / 48% 42% 58% 52%; }
+    50%{ border-radius:58% 42% 40% 60% / 40% 60% 40% 60%; }
+  }
+  .orbit-ring{ position:absolute; inset:0; animation:spin 46s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg);} }
+  @keyframes counterspin{ to{ transform:rotate(-360deg);} }
+  .badge-anchor{ position:absolute; top:50%; left:50%; width:0; height:0; }
+  .badge-counter{ animation:counterspin 46s linear infinite; }
+  .badge-static{ display:inline-block; }
+  .badge{
+    display:flex; align-items:center; gap:6px;
+    font-family:'Space Grotesk',sans-serif; font-size:.72rem; font-weight:500;
+    background:rgba(15,17,32,.75); backdrop-filter:blur(6px);
+    border:1px solid var(--glass-border); color:var(--text);
+    padding:7px 12px; border-radius:100px; white-space:nowrap; transform:translate(-50%,-50%);
+  }
+  .badge .sw{ width:6px; height:6px; border-radius:50%; }
+  @media (prefers-reduced-motion: reduce){
+    .ring-dashed, .orbit-ring, .badge-counter, .photo-blob{ animation:none; }
+  }
+
+  /* ---------------- sections ---------------- */
+  .section{ padding:110px 24px; }
+  .kicker{
+    font-size:.76rem; letter-spacing:.02em; color:var(--violet); margin-bottom:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .kicker::before{ content:""; width:22px; height:1px; background:var(--violet); }
+  .section h2{ font-size:clamp(1.8rem,4vw,2.6rem); max-width:16ch; margin-bottom:20px; }
+  .section p.lede{ color:var(--text-dim); max-width:60ch; font-size:1.02rem; margin-bottom:48px; }
+
+  .glass{
+    background:var(--glass); border:1px solid var(--glass-border); border-radius:20px;
+    backdrop-filter:blur(10px);
+  }
+
+  /* about */
+  .about-grid{ display:grid; grid-template-columns:1.2fr .8fr; gap:28px; }
+  .about-grid .glass{ padding:34px; }
+  .fact{ display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--glass-border); font-size:.9rem; }
+  .fact:last-child{ border-bottom:none; }
+  .fact span:first-child{ color:var(--text-dim); }
+
+  /* experience - horizontal scroll */
+  .scroll-hint{ font-size:.76rem; color:var(--text-dim); margin-bottom:18px; }
+  .h-scroll{
+    display:flex; gap:20px; overflow-x:auto; padding-bottom:20px; scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;
+  }
+  .h-scroll::-webkit-scrollbar{ height:6px; }
+  .h-scroll::-webkit-scrollbar-thumb{ background:var(--glass-border); border-radius:10px; }
+  .xcard{
+    flex:0 0 320px; scroll-snap-align:start; padding:28px; display:flex; flex-direction:column;
+  }
+  .xcard .date{ font-size:.74rem; color:var(--cyan); margin-bottom:10px; }
+  .xcard h3{ font-size:1.08rem; margin-bottom:4px; }
+  .xcard .org{ font-size:.85rem; color:var(--text-dim); margin-bottom:16px; display:block; }
+  .xcard ul{ margin:0; padding-left:18px; font-size:.86rem; color:var(--text-dim); }
+  .xcard li{ margin-bottom:8px; }
+
+  /* education */
+  .edu-card{ padding:40px; display:flex; align-items:center; gap:40px; flex-wrap:wrap; }
+  .edu-big{ font-family:'Space Grotesk',sans-serif; font-size:3.4rem; font-weight:700; }
+  .edu-big small{ font-size:1.1rem; color:var(--text-dim); font-weight:400; }
+
+  /* leadership */
+  .lead-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+  .tilt-card{ padding:26px; transition:transform .25s ease, border-color .25s ease; }
+  .tilt-card:hover{ border-color:rgba(139,107,255,.4); }
+  .tilt-card .date{ font-size:.74rem; color:var(--cyan); margin-bottom:8px; display:block; }
+  .tilt-card h4{ font-size:1rem; margin-bottom:8px; }
+  .tilt-card p{ font-size:.86rem; color:var(--text-dim); margin:0; }
+
+  /* skills cloud */
+  .cloud{ display:flex; flex-wrap:wrap; gap:14px; }
+  .chip{
+    font-family:'Space Grotesk',sans-serif; font-size:.85rem; padding:10px 18px; border-radius:100px;
+    border:1px solid var(--glass-border); background:var(--glass);
+    animation:bob 5s ease-in-out infinite;
+    transition:transform .2s ease, border-color .2s ease, color .2s ease;
+  }
+  .chip:hover{ transform:scale(1.08); border-color:var(--cyan); color:var(--cyan); }
+  @keyframes bob{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-6px);} }
+  @media (prefers-reduced-motion: reduce){ .chip{ animation:none; } }
+
+  /* certifications */
+  .medal-row{ display:flex; flex-wrap:wrap; gap:24px; }
+  .medal{
+    position:relative; width:160px; padding:22px 16px; text-align:center; overflow:hidden;
+  }
+  .medal::after{
+    content:""; position:absolute; top:0; left:-150%; width:60%; height:100%;
+    background:linear-gradient(100deg, transparent, rgba(255,255,255,.18), transparent);
+    transition:left .6s ease;
+  }
+  .medal:hover::after{ left:150%; }
+  .medal .ic{ font-family:'Space Grotesk',sans-serif; font-size:1.4rem; font-weight:700; color:var(--amber); margin-bottom:10px; }
+  .medal .cap{ font-size:.76rem; color:var(--text-dim); line-height:1.4; }
+
+  /* achievements */
+  .ach-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+  .ach-card{ padding:26px; display:flex; gap:16px; align-items:flex-start; }
+  .ach-mark{
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.1rem; color:var(--bg);
+    background:linear-gradient(120deg,var(--amber),var(--coral));
+    border-radius:12px; width:46px; height:46px; display:flex; align-items:center; justify-content:center;
+    flex:none; font-size:.78rem; text-align:center; line-height:1.1;
+  }
+  .ach-card p{ margin:0; font-size:.88rem; color:var(--text-dim); }
+  .ach-card strong{ color:var(--text); display:block; margin-bottom:4px; font-family:'Space Grotesk',sans-serif; }
+
+  /* projects - tilt */
+  .proj-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+  .proj-card{
+    padding:28px; transform-style:preserve-3d; transition:transform .1s ease, border-color .2s ease;
+    display:flex; flex-direction:column; min-height:300px;
+  }
+  .proj-card:hover{ border-color:rgba(63,232,207,.4); }
+  .proj-tag{ font-size:.7rem; color:var(--cyan); margin-bottom:12px; }
+  .proj-card h3{ font-size:1.08rem; margin-bottom:10px; }
+  .proj-card p{ font-size:.86rem; color:var(--text-dim); flex:1; }
+  .proj-stack{ font-size:.72rem; color:var(--amber); margin:14px 0 16px; }
+  .proj-card .btn-ghost{ align-self:flex-start; padding:10px 18px; font-size:.8rem; }
+
+  /* contact */
+  .contact{ text-align:center; padding:130px 24px; }
+  .contact h2{ font-size:clamp(2rem,6vw,3.4rem); margin:0 auto 22px; max-width:16ch; }
+  .contact p{ color:var(--text-dim); max-width:50ch; margin:0 auto 40px; }
+  .social-row{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-top:44px; }
+
+  footer{ text-align:center; padding:30px 24px 50px; font-size:.76rem; color:var(--text-dim); }
+
+  @media (max-width:860px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .about-grid{ grid-template-columns:1fr; }
+    .lead-grid, .ach-grid{ grid-template-columns:1fr; }
+    .proj-grid{ grid-template-columns:1fr; }
+    .orbit-wrap{ order:-1; margin-bottom:20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-mesh">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<nav>
+  <div class="nav-pill">
+    <span class="brand">Hadeel<span class="grad-text">.</span></span>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#certifications">Certs</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> Open to software engineering &amp; QA roles</div>
+      <h1>I build things,<br>then I try to <span class="grad-text">break them</span> first.</h1>
+      <p class="role">Software Engineer with a QA and cloud instinct — I ship features, then stress-test them before anyone else can. Based in Riyadh, Saudi Arabia.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary magnetic" href="#contact">Get in touch</a>
+        <a class="btn btn-ghost magnetic" href="https://68ee55e2-8f44-4053-89fd-29a521a84ec8.filesusr.com/ugd/e24f1b_2805c941c8b44d97a8742682bb0eceb7.pdf" target="_blank" rel="noopener">Download resume</a>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><div class="num"><span class="count" data-target="4.88" data-decimals="2">0</span></div><div class="label">GPA / 5.00</div></div>
+        <div class="stat"><div class="num"><span class="count" data-target="4">0</span></div><div class="label">Certifications</div></div>
+        <div class="stat"><div class="num"><span class="count" data-target="3">0</span></div><div class="label">Shipped projects</div></div>
+        <div class="stat"><div class="num">🏆 <span class="count" data-target="2">0</span></div><div class="label">Hackathon wins</div></div>
+      </div>
+    </div>
+
+    <div class="orbit-wrap">
+      <div class="ring-dashed"></div>
+      <div class="photo-blob">
+        <img src="https://static.wixstatic.com/media/e24f1b_07e600dde9a84cb0acf4343e632deb0c~mv2.jpg/v1/fill/w_980,h_1219,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/0Q3A1194.jpg" alt="Portrait of Hadeel Alshahrani">
+      </div>
+      <div class="orbit-ring" id="orbitRing">
+        <div class="badge-anchor" style="transform:rotate(0deg) translateX(190px);">
+          <div class="badge-counter"><div class="badge"><span class="sw" style="background:var(--violet)"></span>AWS Cloud</div></div>
+        </div>
+        <div class="badge-anchor" style="transform:rotate(60deg) translateX(190px);">
+          <div class="badge-counter"><div class="badge"><span class="sw" style="background:var(--cyan)"></span>Selenium</div></div>
+        </div>
+        <div class="badge-anchor" style="transform:rotate(120deg) translateX(190px);">
+          <div class="badge-counter"><div class="badge"><span class="sw" style="background:var(--coral)"></span>ReactJS</div></div>
+        </div>
+        <div class="badge-anchor" style="transform:rotate(180deg) translateX(190px);">
+          <div class="badge-counter"><div class="badge"><span class="sw" style="background:var(--amber)"></span>Python</div></div>
+        </div>
+        <div class="badge-anchor" style="transform:rotate(240deg) translateX(190px);">
+          <div class="badge-counter"><div class="badge"><span class="sw" style="background:var(--violet)"></span>ISTQB</div></div>
+        </div>
+        <div class="badge-anchor" style="transform:rotate(300deg) translateX(190px);">
+          <div class="badge-counter"><div class="badge"><span class="sw" style="background:var(--cyan)"></span>Java</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="about">
+  <div class="wrap">
+    <p class="kicker">About</p>
+    <h2>Computer science graduate, hands-on with testing and the cloud.</h2>
+    <div class="about-grid">
+      <div class="glass">
+        <p style="color:var(--text-dim); font-size:1rem;">I'm a Computer Science graduate with a strong foundation in programming, software development, and problem-solving. Along the way I found what I actually enjoy: taking an idea, building it, then finding every way it could break before someone else does. I'm a fast learner and detail-oriented by habit, currently looking for a team where I can put both to work.</p>
+        <div class="hero-ctas" style="margin-top:24px; margin-bottom:0;">
+          <a class="btn btn-ghost magnetic" href="https://www.linkedin.com/in/hadeel-alshahrani/" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a class="btn btn-ghost magnetic" href="https://github.com/ihdil" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+      <div class="glass">
+        <div class="fact"><span>Focus</span><span>QA · Cloud · Web</span></div>
+        <div class="fact"><span>Education</span><span>B.Sc. Computer Science</span></div>
+        <div class="fact"><span>Based in</span><span>Riyadh, Saudi Arabia</span></div>
+        <div class="fact"><span>Status</span><span>Open to work</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="experience">
+  <div class="wrap">
+    <p class="kicker">Experience</p>
+    <h2>Where I've worked</h2>
+    <p class="scroll-hint">← scroll to explore →</p>
+    <div class="h-scroll">
+      <div class="xcard glass">
+        <span class="date">JUN 2024 — OCT 2024</span>
+        <h3>Software Engineer</h3>
+        <span class="org">Saudi Aramco</span>
+        <ul>
+          <li>Built interactive dashboards using Power BI and SQL for internal reporting.</li>
+          <li>Enhanced front-end features using ReactJS, improving UI functionality.</li>
+          <li>Helped manage data pipelines using IBM Cloud Pak.</li>
+        </ul>
+      </div>
+      <div class="xcard glass">
+        <span class="date">JAN 2024 — JUN 2024</span>
+        <h3>Training &amp; Development Intern</h3>
+        <span class="org">King Khalid University — Deanship of E-Services</span>
+        <ul>
+          <li>Supported digital training programs tied to university transformation goals.</li>
+          <li>Delivered e-platform sessions for faculty and staff.</li>
+          <li>Co-organized tech events reaching 200+ participants.</li>
+        </ul>
+      </div>
+      <div class="xcard glass">
+        <span class="date">MAR 2023 — MAY 2023</span>
+        <h3>SDET Intern</h3>
+        <span class="org">Clarusway</span>
+        <ul>
+          <li>Built automated tests with Selenium, Java, and TestNG.</li>
+          <li>Wrote and ran API tests with Postman and RestAssured.</li>
+          <li>Worked in Agile sprints using Jira and GitHub.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="education">
+  <div class="wrap">
+    <p class="kicker">Education</p>
+    <h2>Foundation</h2>
+    <div class="edu-card glass">
+      <div class="edu-big"><span class="count" data-target="4.88" data-decimals="2">0</span><small>/5.00</small></div>
+      <div>
+        <h3 style="margin-bottom:6px;">Bachelor of Science in Computer Science</h3>
+        <p style="margin:0; color:var(--text-dim); font-size:.92rem;">King Khalid University — Graduated 2023</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="leadership">
+  <div class="wrap">
+    <p class="kicker">Leadership</p>
+    <h2>Outside the classroom</h2>
+    <div class="lead-grid">
+      <div class="tilt-card glass">
+        <span class="date">AUG 2022 — MAY 2023</span>
+        <h4>ASME Club</h4>
+        <p>Helped execute key responsibilities for large-scale events, keeping operations smooth.</p>
+      </div>
+      <div class="tilt-card glass">
+        <span class="date">FEB 2022 — MAY 2023</span>
+        <h4>Digital Minds Club</h4>
+        <p>Managed projects end to end, earning two certificates of appreciation.</p>
+      </div>
+      <div class="tilt-card glass">
+        <span class="date">AUG 2021 — MAY 2022</span>
+        <h4>Google Developer Student Club</h4>
+        <p>Co-organized workshops on Flutter, AI, and IoT for fellow students.</p>
+      </div>
+      <div class="tilt-card glass">
+        <span class="date">FEB 2021 — SEP 2021</span>
+        <h4>Student Advisory Council</h4>
+        <p>Represented the student body with feedback to university administration.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="skills">
+  <div class="wrap">
+    <p class="kicker">Skills</p>
+    <h2>What I bring</h2>
+    <div class="cloud">
+      <span class="chip" style="animation-delay:0s">Software Testing (ISTQB)</span>
+      <span class="chip" style="animation-delay:.3s">IT Service Mgmt (ITIL)</span>
+      <span class="chip" style="animation-delay:.6s">Python</span>
+      <span class="chip" style="animation-delay:.9s">Java</span>
+      <span class="chip" style="animation-delay:1.2s">C++</span>
+      <span class="chip" style="animation-delay:1.5s">HTML / CSS / JS</span>
+      <span class="chip" style="animation-delay:1.8s">Git &amp; GitHub</span>
+      <span class="chip" style="animation-delay:2.1s">Problem Solving</span>
+      <span class="chip" style="animation-delay:2.4s">Agile Collaboration</span>
+      <span class="chip" style="animation-delay:2.7s">Technical Documentation</span>
+      <span class="chip" style="animation-delay:3s">Continuous Learning</span>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="certifications">
+  <div class="wrap">
+    <p class="kicker">Certifications</p>
+    <h2>Earned along the way</h2>
+    <div class="medal-row">
+      <div class="medal glass"><div class="ic">AWS</div><div class="cap">Certified Cloud Practitioner</div></div>
+      <div class="medal glass"><div class="ic">ISTQB</div><div class="cap">Certified Tester — Foundation v4</div></div>
+      <div class="medal glass"><div class="ic">ITIL</div><div class="cap">Foundation, IT Service Mgmt</div></div>
+      <div class="medal glass"><div class="ic">ML</div><div class="cap">Bootcamp — SDAIA Academy</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="achievements">
+  <div class="wrap">
+    <p class="kicker">Achievements</p>
+    <h2>Notable marks</h2>
+    <div class="ach-grid">
+      <div class="ach-card glass">
+        <div class="ach-mark">🎓</div>
+        <p><strong>Dean's List</strong>Recognized for outstanding academic performance throughout the CS program.</p>
+      </div>
+      <div class="ach-card glass">
+        <div class="ach-mark">⭐</div>
+        <p><strong>Certificate of Excellence</strong>Awarded for active contribution to club activities and community engagement.</p>
+      </div>
+      <div class="ach-card glass">
+        <div class="ach-mark">1st</div>
+        <p><strong>Flutter Hackathon</strong>Led development of a winning mobile app, start to finish.</p>
+      </div>
+      <div class="ach-card glass">
+        <div class="ach-mark">5th</div>
+        <p><strong>HPC Hackathon</strong>Built an AI-based solution for environmental resource management.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="projects">
+  <div class="wrap">
+    <p class="kicker">Projects</p>
+    <h2>Things I've built</h2>
+    <div class="proj-grid">
+      <div class="proj-card glass tilt-3d">
+        <span class="proj-tag">AI · HPC · Computer Vision</span>
+        <h3>AquaIntl</h3>
+        <p>An AI solution built on high-performance computing to detect and classify plastic waste along coastal regions, using computer vision and satellite data to support ocean cleanup.</p>
+        <span class="proj-stack">HPC · CV · SATELLITE DATA</span>
+        <a class="btn btn-ghost" href="https://github.com/ihdil/AquaIntel.git" target="_blank" rel="noopener">View project ↗</a>
+      </div>
+      <div class="proj-card glass tilt-3d">
+        <span class="proj-tag">QA · Test Automation</span>
+        <h3>E-commerce Test Suite</h3>
+        <p>End-to-end test automation for an online store, covering UI and API testing with structured cases for functionality, performance, and reliability.</p>
+        <span class="proj-stack">SELENIUM · JAVA · TESTNG · POSTMAN</span>
+        <a class="btn btn-ghost" href="https://github.com/Maad-Ali/SDA_Project.git" target="_blank" rel="noopener">View project ↗</a>
+      </div>
+      <div class="proj-card glass tilt-3d">
+        <span class="proj-tag">Mobile · AI</span>
+        <h3>AI Fitness App</h3>
+        <p>A mobile health and fitness app with AI-driven, personalized workout recommendations based on user activity and goals.</p>
+        <span class="proj-stack">DART · MYSQL · MOBILE</span>
+        <a class="btn btn-ghost" href="https://drive.google.com/file/d/1hZCE2qu3k1f2zFVz-r7MJIeW5RKjmhP7/view?usp=sharing" target="_blank" rel="noopener">View project ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <p class="kicker" style="justify-content:center;">Contact</p>
+  <h2>Let's build something <span class="grad-text">worth testing</span>.</h2>
+  <p>Open to software engineering, QA, and cloud roles. I'd love to hear from you.</p>
+  <a class="btn btn-primary magnetic" href="mailto:hadeelsaadalshahrani@gmail.com" style="font-size:1rem; padding:16px 34px;">hadeelsaadalshahrani@gmail.com</a>
+  <div class="social-row">
+    <a class="btn btn-ghost magnetic" href="tel:+966501026140">+966 50 102 6140</a>
+    <a class="btn btn-ghost magnetic" href="https://www.linkedin.com/in/hadeel-alshahrani/" target="_blank" rel="noopener">LinkedIn ↗</a>
+    <a class="btn btn-ghost magnetic" href="https://github.com/ihdil" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
+</section>
+
+<footer>© 2026 Hadeel Alshahrani — Riyadh, Saudi Arabia</footer>
+
+<script>
+  // cursor glow follow (desktop only)
+  if (matchMedia('(pointer:fine)').matches) {
+    const glow = document.getElementById('cursorGlow');
+    let mx = -500, my = -500, cx = -500, cy = -500;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    function loop(){
+      cx += (mx - cx) * 0.12;
+      cy += (my - cy) * 0.12;
+      glow.style.transform = `translate(${cx}px, ${cy}px)`;
+      requestAnimationFrame(loop);
+    }
+    loop();
+  }
+
+  // magnetic buttons
+  document.querySelectorAll('.magnetic').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const r = btn.getBoundingClientRect();
+      const x = e.clientX - r.left - r.width/2;
+      const y = e.clientY - r.top - r.height/2;
+      btn.style.transform = `translate(${x*0.25}px, ${y*0.35}px)`;
+    });
+    btn.addEventListener('mouseleave', () => { btn.style.transform = 'translate(0,0)'; });
+  });
+
+  // 3D tilt on project cards
+  document.querySelectorAll('.tilt-3d').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transform = `perspective(700px) rotateX(${py * -8}deg) rotateY(${px * 8}deg) translateZ(4px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(700px) rotateX(0) rotateY(0)';
+    });
+  });
+
+  // animated counters, triggered once when visible
+  const counters = document.querySelectorAll('.count');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = parseFloat(el.dataset.target);
+        const decimals = parseInt(el.dataset.decimals || '0');
+        const duration = 1400;
+        const start = performance.now();
+        function tick(now){
+          const p = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = (target * eased).toFixed(decimals);
+          if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+        io.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(c => io.observe(c));
+</script>
+
+</body>
+</html>
